@@ -59,6 +59,19 @@ namespace RC.DataPress.Metamodel
             {
                 _baseEntity = modelManager.Entity(baseType);
             }
+
+            foreach (var field in _fields.Values.Where(f => !f.isPrimitive))
+            {
+                foreach (var attr in field.MemberInfo.GetCustomAttributes())
+                {
+                    switch (attr)
+                    {
+                        case ForeignKeyAttribute a:
+                            field.ForeignKey = this.getField(a.Name);
+                            break;
+                    }
+                }
+            }
             
         }
 

@@ -16,6 +16,8 @@ namespace RC.DataPress.Metamodel
         private Type _valueType;
         private IEntityType _entityType;
         private MemberInfo _memberInfo;
+        private IEntityField _foreignKey;
+        private IEntityField _collectionInverseField;
         private int _Size;
 
         private Int32 _flags;
@@ -81,6 +83,8 @@ namespace RC.DataPress.Metamodel
         public MemberInfo MemberInfo => _memberInfo;
 
         public Type MemberType => isProperty ? ((PropertyInfo)_memberInfo).PropertyType : ((FieldInfo)_memberInfo).FieldType;
+
+        public IEntityField ForeignKey { get => _foreignKey; set => _foreignKey = value; }
 
         private void setIsNullableType(bool value) => _flags = value ? (_flags | _isNotMapped) : (_flags & ~_isNotMapped);
         private void setIsCollection(bool value) => _flags = value ? (_flags | _isCollection) : (_flags & ~_isCollection);
@@ -158,8 +162,31 @@ namespace RC.DataPress.Metamodel
                     case StringLengthAttribute a:
                         _Size = a.MaximumLength;
                         break;
+                   
                 }
             }
         }
+
+        public IEntityField CollectionInverseField
+        {
+            get
+            {
+                if (isPrimitive && !isCollection) return null;
+
+                if (_collectionInverseField == null)
+                {
+                    var attr = _memberInfo.GetCustomAttribute<InversePropertyAttribute>();
+                    if (attr != null)
+                    {
+                        _collectionInverseField = ValueEntityType.getField(attr.Property);
+                    }
+                }
+
+                return _collectionInverseField;
+            }
+
+            set { _collectionInverseField = value; }
+        }
+
     }
 }

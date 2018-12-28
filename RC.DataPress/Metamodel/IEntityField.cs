@@ -44,5 +44,10 @@ namespace RC.DataPress.Metamodel
         bool isPrimitive { get; }
 
         int Size { get; set; }
+
+
+        IEntityField ForeignKey { get; set; }
+
+        IEntityField CollectionInverseField { get; set; }
     }
 }

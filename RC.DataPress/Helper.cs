@@ -141,6 +141,7 @@ namespace RC.DataPress
 
         #endregion // Reflection
 
+        #region Hash
 
         public static int GetHash<T1, T2>(T1 x1, T2 x2)
         {
@@ -160,5 +161,7 @@ namespace RC.DataPress
                 return hash * 23 + (x3 != null ? x3.GetHashCode() : 0);
             }
         }
+
+        #endregion // Hash
     }
 }

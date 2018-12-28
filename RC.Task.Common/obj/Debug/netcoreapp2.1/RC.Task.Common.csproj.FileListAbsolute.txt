@@ -6,3 +6,4 @@ C:\Dev\volodan\DevX\NetCore\RC.Task\RC.Task.Common\obj\Debug\netcoreapp2.1\RC.Ta
 C:\Dev\volodan\DevX\NetCore\RC.Task\RC.Task.Common\obj\Debug\netcoreapp2.1\RC.Task.Common.AssemblyInfo.cs
 C:\Dev\volodan\DevX\NetCore\RC.Task\RC.Task.Common\obj\Debug\netcoreapp2.1\RC.Task.Common.dll
 C:\Dev\volodan\DevX\NetCore\RC.Task\RC.Task.Common\obj\Debug\netcoreapp2.1\RC.Task.Common.pdb
+C:\Dev\volodan\DevX\NetCore\RC.Task\RC.Task.Common\obj\Debug\netcoreapp2.1\RC.Task.Common.csprojAssemblyReference.cache

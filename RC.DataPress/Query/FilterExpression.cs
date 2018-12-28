@@ -76,4 +76,24 @@ namespace RC.DataPress.Query
             return sql.Append('@').Append(_param.Name);
         }
     }
+
+    public class BinaryOperatorFilterExpression : FilterExpression
+    {
+        Expression _left;
+        Expression _right;
+        string _operator;
+
+        public BinaryOperatorFilterExpression(Expression left, string @operator, Expression right)
+        {
+            _left = left;
+            _operator = @operator;
+            _right = right;
+        }
+
+        public override StringBuilder CompileToSQL(StringBuilder sql)
+        {
+            _left.CompileToSQL(sql).Append(_operator);
+            return _right.CompileToSQL(sql);
+        }
+    }
 }

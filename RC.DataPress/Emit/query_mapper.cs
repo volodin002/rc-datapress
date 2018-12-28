@@ -21,10 +21,9 @@ namespace RC.DataPress.Emit
     {
         
         private readonly ILGenerator _gen;
-        //private readonly bool _graph;
-        Label _whileStartLabel;
-        Label _whileEndLabel;
-
+        
+        //Label _whileStartLabel;
+        //Label _whileEndLabel;
         //public override IEntityType Entity => _entity;
 
 
@@ -104,11 +103,12 @@ namespace RC.DataPress.Emit
         public void emit()
         {
             if (all_locals == null)
-                emitNotGraph();
+                new query_mapper_emiter(_gen, this).emit();
             else
-                emitGrapth();
+                new query_mapper_graph_emiter(_gen, this).emit();
         }
 
+        /*
         public void emitNotGraph()
         {
             var resultType = typeof(List<>).MakeGenericType(entity.EntityClass);
@@ -134,6 +134,7 @@ namespace RC.DataPress.Emit
             _gen.Emit(OpCodes.Ret);
         }
 
+        
         public void emitGrapth()
         {
             var genericType = typeof(Dictionary<,>);
@@ -215,7 +216,7 @@ namespace RC.DataPress.Emit
             //var isInCache = _gen.DefineLabel();
             //_gen.Emit(OpCodes.Brtrue, isInCache); // if in cache => skip object creation
 
-            ///* IF NOT IN CACHE */
+            /// IF NOT IN CACHE 
             //{
             //    _gen.Emit(OpCodes.Dup); //  //[list] -> [list, list]
 
@@ -247,7 +248,7 @@ namespace RC.DataPress.Emit
             //    _gen.Emit(OpCodes.Br, _whileStartLabel);
             //}
 
-            ///* ITEM EXISTS IN CACHE */
+            /// ITEM EXISTS IN CACHE 
             //_gen.MarkLabel(isInCache);
                 
 
@@ -261,7 +262,7 @@ namespace RC.DataPress.Emit
             //    var isInHashSet = _gen.DefineLabel();
             //    _gen.Emit(OpCodes.Brfalse, isInHashSet); // [list, IsContains] => [ list ]
 
-            //    /* NOT EXISTS IN HashSet */
+            //    -- // NOT EXISTS IN HashSet // --
             //    {
             //        // Add item to the result List
             //        _gen.Emit(OpCodes.Dup); // [list] => [list, list]
@@ -278,7 +279,7 @@ namespace RC.DataPress.Emit
             //        setEntitySimpleFields(_gen, this); // [..., T] => [..., T]
             //    }
             //    _gen.MarkLabel(isInHashSet);
-            //    /* EXISTS IN HashSet */
+            //    -- // EXISTS IN HashSet // --
             //    {
             //        setEntityComplexFields(_gen, this, entity_caches); // [..., T] -> [..., T]
             //    }
@@ -336,8 +337,8 @@ namespace RC.DataPress.Emit
             _gen.Emit(OpCodes.Br, _whileStartLabel); // goto to the start of while(){} loop
             _gen.MarkLabel(_whileEndLabel); // } end while
         }
+        */
 
     }
-
     
 }

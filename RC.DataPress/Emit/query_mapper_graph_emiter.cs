@@ -10,21 +10,69 @@ namespace RC.DataPress.Emit
 {
     class query_mapper_graph_emiter : query_mapper_emiter
     {
-        query_mapper_graph_emiter(ILGenerator gen, IModelManager manager, query_mapper mapper) : base(gen, manager, mapper) { }
+        public query_mapper_graph_emiter(ILGenerator gen, query_mapper mapper) : base(gen, mapper) { }
+
+        public override void emit()
+        {
+            initLocals(); // [] -> []
+
+            newResultList(); // [] -> [list]
+
+            beginWhile();
+
+            _gen.Emit(OpCodes.Dup); // [list] -> [list, list]
+
+            { // try get entity from list
+                _gen.Emit(OpCodes.Dup); // [list, list] -> [list, list, list]
+
+                getEntityFieldValue(_mapper.key_field.entityField);   // [list, list, list] -> [list, list, list, id]
+
+                var tryGetMethod = _resultType.GetMethod("TryGet");
+
+                _gen.Emit(OpCodes.Ldloca, _mapper.entity_locals.obj); // [list, list, list, id] -> [list, list, list, id, &T]
+                _gen.Emit(OpCodes.Callvirt, tryGetMethod);            // [list, list, list, id, &T] -> [list, list, TryGet(id, &T)]
+
+            } // [list] -> [list, TryGet(id, &T)]
+
+            var entityExistsInCollectionLabel = _gen.DefineLabel();
+            _gen.Emit(OpCodes.Brtrue, entityExistsInCollectionLabel); // [list, list, TryGet(id, &T)] -> [list, list]
+
+            newEntityOrGetExisting(_mapper); // [list, list] -> [list, list, new T()]
+
+            setEntitySimpleFields(_mapper);  // [list, list, T] -> [list, list, T]
+
+            {
+                var entityNotExistsInCollectionLabel = _gen.DefineLabel();
+                _gen.Emit(OpCodes.Br_S, entityNotExistsInCollectionLabel);
+                _gen.MarkLabel(entityExistsInCollectionLabel);
+
+                stloc_with_cast(_mapper); // [list, list] -> [list, list, T]
+
+                _gen.MarkLabel(entityNotExistsInCollectionLabel);
+            }
+
+            setEntityComplexFields(_mapper); // [list, list, T] -> [list, list, T]
+
+            addItemToResult();               // [list, list, T] -> [list]
+
+            endWhile();
+
+            _gen.Emit(OpCodes.Ret); // [list] -> []
+        }
 
         protected override void newResultList()
         {
             _resultType = typeof(ResizableArrayWithKeySet<,,>)
-                .MakeGenericType(entity.KeyField.ValueType, entity_locals.obj.LocalType, entity.EntityClass);
+                .MakeGenericType(_mapper.entity.KeyField.ValueType, _mapper.entity_locals.obj.LocalType, _mapper.entity.EntityClass);
         }
 
         protected override void initLocals()
         {
             var dictGenericType = typeof(Dictionary<,>);
-            foreach (var locals in all_locals)
+            foreach (var locals in _mapper.all_locals)
             {
                 var loce = locals.entity;
-                if (locals == entity_locals && entity_locals.count > 0)
+                if (locals == _mapper.entity_locals && _mapper.entity_locals.count > 0)
                 {
                     var dict_type = dictGenericType.MakeGenericType(loce.KeyField.ValueType, loce.EntityClass);
                     locals.dict = _gen.DeclareLocal(dict_type);
@@ -229,6 +277,7 @@ namespace RC.DataPress.Emit
 
             setEntityFieldValue(queryEntityField.entityField);       // [..., T, T, collection<E>] -> [..., T]
         }
+
 
         protected override Type getCollectionType(query_entity_field queryEntityField)
         {

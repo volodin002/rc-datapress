@@ -11,17 +11,6 @@ namespace RC.DataPress.Emit
     class query_mapper_emiter
     {
         protected ILGenerator _gen;
-        protected IModelManager _manager;
-
-        public query_field key_field;
-        public query_field type_field;
-        public List<query_field> fields;
-        public List<query_entity_field> entities;
-
-        public entity_locals entity_locals;
-
-        public IEntityType entity;
-        public List<entity_locals> all_locals;
 
         protected Label _whileStartLabel;
         protected Label _whileEndLabel;
@@ -29,25 +18,16 @@ namespace RC.DataPress.Emit
 
         protected query_mapper _mapper;
 
-        public query_mapper_emiter(ILGenerator gen, IModelManager manager, query_mapper mapper)
+        public query_mapper_emiter(ILGenerator gen, query_mapper mapper)
         {
             _gen = gen;
-            _manager = manager;
-
             _mapper = mapper;
-
-            //this.key_field = mapper.key_field;
-            //this.type_field = mapper.type_field;
-            //this.fields = mapper.fields;
-            //this.entities = mapper.entities;
-            //this.entity = mapper.entity;
-            //this.entity_locals = mapper.entity_locals;
-            //this.all_locals = mapper.all_locals;
-
         }
 
         public virtual void emit()
         {
+            newResultList(); // [] -> [list]
+
             beginWhile();
 
             _gen.Emit(OpCodes.Dup); //[list] -> [list, list]
@@ -69,9 +49,9 @@ namespace RC.DataPress.Emit
         /// emit: result = new collection<T>();
         /// stack: [...] -> [..., collection<T>]
         /// </summary>
-        protected virtual void newResultList()
+        protected virtual void newResultList() // [...] -> [..., collection<T>]
         {
-            _resultType = typeof(List<>).MakeGenericType(entity.EntityClass);
+            _resultType = typeof(List<>).MakeGenericType(_mapper.entity.EntityClass);
             // [] -> [list]
             EmitHelper.EmitNewObject(_gen, _resultType);
         }
@@ -90,7 +70,7 @@ namespace RC.DataPress.Emit
         {
             if (queryEntity.type_field != null)
             {
-                var derivedEntities = _manager
+                var derivedEntities = _mapper.entity.ModelManager
                     .getDerivedEntityTypes(queryEntity.entity.EntityClass).Where(x => !x.isAbstract)
                     .ToList();
 
@@ -202,7 +182,7 @@ namespace RC.DataPress.Emit
                 if (queryEntityField.key_field.isNullable)
                 {
                     EmitHelper.EmitIsDbNull(_gen, queryEntityField.key_field.ordinal); // [..., T] ->  [..., T, id==null]
-                    _gen.Emit(OpCodes.Brtrue, endSetEntityLabel); // [..., T, id==null] ->  [..., T]
+                    _gen.Emit(OpCodes.Brtrue, endSetEntityLabel);                      // [..., T, id==null] ->  [..., T]
                 }
 
                 if(queryEntityField.entityField.isCollection)
@@ -290,7 +270,7 @@ namespace RC.DataPress.Emit
         /// emit: while(rs.next()) {
         /// stack: [...] -> [...]
         /// </summary>
-        void beginWhile()
+        protected void beginWhile() // [...] -> [...]
         {
             _whileStartLabel = _gen.DefineLabel();
             _gen.MarkLabel(_whileStartLabel); // while {
@@ -310,7 +290,7 @@ namespace RC.DataPress.Emit
         /// emit:  } end while
         /// stack: [...] -> [...]
         /// </summary>
-        void endWhile()
+        protected void endWhile() // [...] -> [...]
         {
             _gen.Emit(OpCodes.Br, _whileStartLabel); // goto to the start of while(){} loop
             _gen.MarkLabel(_whileEndLabel); // } end while

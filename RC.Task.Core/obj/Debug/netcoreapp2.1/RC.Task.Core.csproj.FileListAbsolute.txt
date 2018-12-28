@@ -1,0 +1,12 @@
+C:\Dev\volodan\DevX\NetCore\RC.Task\RC.Task.Core\bin\Debug\netcoreapp2.1\RC.Task.Core.deps.json
+C:\Dev\volodan\DevX\NetCore\RC.Task\RC.Task.Core\bin\Debug\netcoreapp2.1\RC.Task.Core.dll
+C:\Dev\volodan\DevX\NetCore\RC.Task\RC.Task.Core\bin\Debug\netcoreapp2.1\RC.Task.Core.pdb
+C:\Dev\volodan\DevX\NetCore\RC.Task\RC.Task.Core\bin\Debug\netcoreapp2.1\RC.Task.Common.dll
+C:\Dev\volodan\DevX\NetCore\RC.Task\RC.Task.Core\bin\Debug\netcoreapp2.1\RC.Task.Common.pdb
+C:\Dev\volodan\DevX\NetCore\RC.Task\RC.Task.Core\obj\Debug\netcoreapp2.1\RC.Task.Core.csprojAssemblyReference.cache
+C:\Dev\volodan\DevX\NetCore\RC.Task\RC.Task.Core\obj\Debug\netcoreapp2.1\RC.Task.Core.csproj.CoreCompileInputs.cache
+C:\Dev\volodan\DevX\NetCore\RC.Task\RC.Task.Core\obj\Debug\netcoreapp2.1\RC.Task.Core.AssemblyInfoInputs.cache
+C:\Dev\volodan\DevX\NetCore\RC.Task\RC.Task.Core\obj\Debug\netcoreapp2.1\RC.Task.Core.AssemblyInfo.cs
+C:\Dev\volodan\DevX\NetCore\RC.Task\RC.Task.Core\obj\Debug\netcoreapp2.1\RC.Task.Core.csproj.CopyComplete
+C:\Dev\volodan\DevX\NetCore\RC.Task\RC.Task.Core\obj\Debug\netcoreapp2.1\RC.Task.Core.dll
+C:\Dev\volodan\DevX\NetCore\RC.Task\RC.Task.Core\obj\Debug\netcoreapp2.1\RC.Task.Core.pdb

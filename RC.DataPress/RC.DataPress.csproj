@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <LangVersion>7.2</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Emit\FactoryEmiter - Copy.cs" />
+    <Compile Remove="Emit\query_mapper - Copy.cs" />
+  </ItemGroup>
+
+</Project>

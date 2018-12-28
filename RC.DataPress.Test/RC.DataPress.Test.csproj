@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.5.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RC.DataPress\RC.DataPress.csproj" />
+    <ProjectReference Include="..\RC.Task.Common\RC.Task.Common.csproj" />
+    <ProjectReference Include="..\RC.Task.Core\RC.Task.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="CP\" />
+  </ItemGroup>
+
+</Project>
